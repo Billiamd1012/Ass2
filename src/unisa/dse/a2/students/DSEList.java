@@ -163,10 +163,28 @@ public class DSEList implements List {
 
 	//searches list for parameter's String return true if found
 	public boolean contains(String obj) {
+		Node currentNode = this.head;
+		while (currentNode != null) {
+			if (currentNode.getString().equals(obj)) {
+				return true;
+			}
+			currentNode = currentNode.next;
+		}
+		return false;
 	}
 
 	//removes the parameter's String form the list
 	public boolean remove(String obj) {
+		int counter = 0;
+		Node currentNode = this.head;
+		while (currentNode != null) {
+			if (currentNode.getString().equals(obj)) {
+				remove(counter);
+				return true;
+			}
+			currentNode = currentNode.next;
+		}
+		return false;
 	}
 	
 	@Override
@@ -176,6 +194,21 @@ public class DSEList implements List {
 
 	@Override
 	public boolean equals(Object other) {
+		Node thisNode = this.head;
+		if (!(other instanceof DSEList)) {
+			return false;
+		}
+		Node otherNode = ((DSEList) other).head;
+		while (thisNode != null && otherNode != null) {
+			if (thisNode.toString() != otherNode.toString()) {
+				return false;
+			}
+			thisNode = thisNode.next;
+			otherNode = otherNode.next;
+		}
+		if (thisNode != null || otherNode != null) {
+			return false;
+		}
 		return true;
 	}
 	
