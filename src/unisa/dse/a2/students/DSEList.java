@@ -15,10 +15,24 @@ public class DSEList implements List {
 		
 	}
 	public DSEList(Node head_) {
+		head = head_;
 	}
 	
 	//Takes a list then adds each element into a new list
-	public DSEList(DSEList other) { // Copy constructor. 
+	public DSEList(DSEList other) {
+		this.head = null;
+		this.tail = null;
+		// check if other DSEList is not empty
+		if (other.head != null) {
+			Node currentNode = other.head;
+			this.head = new Node(currentNode.next, currentNode.prev, currentNode.getString());
+			while (currentNode.next != null) {
+				currentNode = currentNode.next;
+				this.head.next = new Node(currentNode.next, currentNode.prev, currentNode.getString());
+			}
+			this.tail = currentNode;
+		}
+
 	}
 
 	//remove the String at the parameter's index
