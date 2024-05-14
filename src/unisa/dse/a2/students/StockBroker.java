@@ -1,5 +1,6 @@
 package unisa.dse.a2.students;
 
+import java.util.NoSuchElementException;
 import java.util.PriorityQueue;
 
 public class StockBroker {
@@ -82,9 +83,13 @@ public class StockBroker {
 	 */
 	public Trade getNextTrade()
 	{
-		Trade nextTrade = pendingTrades.iterator().next();
-		pendingTrades.remove(nextTrade);
-		return nextTrade;
+		try {
+			Trade nextTrade = pendingTrades.iterator().next();
+			pendingTrades.remove(nextTrade);
+			return nextTrade;
+		} catch (NoSuchElementException e) {
+			return null;
+		}
 	}
 	
 	/**

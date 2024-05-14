@@ -1,11 +1,13 @@
 package unisa.dse.a2.students;
 
 import java.util.HashMap;
-import java.util.Scanner;
+//import java.util.Scanner;
 
 import unisa.dse.a2.interfaces.ListGeneric;
 
 public class SecuritiesExchange {
+
+	private static final Exception UntradedCompanyException = null;
 
 	/**
 	 * Exchange name
@@ -13,6 +15,7 @@ public class SecuritiesExchange {
 	private String name;
 	
 	public String getName() {
+		return name;
 	}
 	
 	/**
@@ -34,8 +37,9 @@ public class SecuritiesExchange {
 	 * Initialises the exchange ready to handle brokers, announcements, and companies
 	 * @param name
 	 */
-	public SecuritiesExchange(String name)
+	public SecuritiesExchange(String _name)
 	{
+		name = _name;
 	}
 	
 	/**
@@ -45,6 +49,11 @@ public class SecuritiesExchange {
 	 */
 	public boolean addCompany(ListedCompany company)
 	{
+		if (companies.containsKey(company.getCode())){
+			return false;
+		}
+		companies.put(company.getCode(), company);
+		return true;
 	}
 
 	/**
@@ -53,6 +62,11 @@ public class SecuritiesExchange {
 	 */
 	public boolean addBroker(StockBroker broker)
 	{
+		if (brokers.contains(broker)){
+			return false;
+		}
+		brokers.add(broker);
+		return true;
 	}
 	
 	/**
@@ -71,12 +85,30 @@ public class SecuritiesExchange {
 	 * @return The number of successful trades completed across all brokers
 	 * @throws UntradedCompanyException when traded company is not listed on this exchange
 	 */
-	public int processTradeRound()
+	public int processTradeRound() throws Exception
 	{
+		int successfulTrades = 0;
+		for (int i = 0; i <= brokers.size(); i++){
+			StockBroker currentBroker = brokers.get(i);
+			if (currentBroker.getNextTrade() == null){
+				continue;
+			}
+			Trade nextTrade = currentBroker.getNextTrade();
+			String nextTradeCompanyCode = nextTrade.getCompanyCode();
+			if (companies.containsKey(nextTradeCompanyCode)){
+				throw UntradedCompanyException;
+			}
+			ListedCompany nextTradeCompany = companies.get(nextTradeCompanyCode);
+			int nextTradeQuantity = nextTrade.getShareQuantity();
+			nextTradeCompany.processTrade(nextTradeQuantity);
+			successfulTrades += nextTradeQuantity;
+		}
+		return successfulTrades;
+
 	}
 	
-	public int runCommandLineExchange(Scanner sc)
-	{
+	// public int runCommandLineExchange(Scanner sc)
+	// {
 		
-	}
+	// }
 }
