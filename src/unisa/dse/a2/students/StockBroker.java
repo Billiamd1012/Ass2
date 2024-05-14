@@ -30,6 +30,14 @@ public class StockBroker {
 	 */
 	public boolean addWatchlist(String companyCode)
 	{
+		if (companyCode == null){
+			return false;
+		}
+		if (watchList.contains(companyCode)){
+			return false;
+		}
+		watchList.add(companyCode);
+		return true;
 	}
 	
 	private String name;
@@ -39,14 +47,16 @@ public class StockBroker {
 	 * @return
 	 */
 	public String getName() {
+		return name;
 	}
 	
 	/**
 	 * Should store the broker's name and ensure the broker is setup ready to use
 	 * @param name
 	 */
-	public StockBroker(String name)
+	public StockBroker(String _name)
 	{
+		name = _name;
 	}
 	
 	/**
@@ -56,6 +66,14 @@ public class StockBroker {
 	 */
 	public boolean placeOrder(Trade order)
 	{
+		if (order == null){
+			return false;
+		}
+		if (pendingTrades.contains(order)){
+			return false;
+		}
+		pendingTrades.add(order);
+		return true;
 	}
 	
 	/**
@@ -64,6 +82,9 @@ public class StockBroker {
 	 */
 	public Trade getNextTrade()
 	{
+		Trade nextTrade = pendingTrades.iterator().next();
+		pendingTrades.remove(nextTrade);
+		return nextTrade;
 	}
 	
 	/**
@@ -71,6 +92,7 @@ public class StockBroker {
 	 */
 	public int getPendingTradeCount()
 	{
+		return pendingTrades.toArray().length;
 	}
 
 	/**
