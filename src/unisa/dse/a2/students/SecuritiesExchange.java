@@ -1,13 +1,11 @@
 package unisa.dse.a2.students;
 
 import java.util.HashMap;
-//import java.util.Scanner;
+import java.util.Scanner;
 
 import unisa.dse.a2.interfaces.ListGeneric;
 
 public class SecuritiesExchange {
-
-	private static final Exception UntradedCompanyException = null;
 
 	/**
 	 * Exchange name
@@ -85,7 +83,7 @@ public class SecuritiesExchange {
 	 * @return The number of successful trades completed across all brokers
 	 * @throws UntradedCompanyException when traded company is not listed on this exchange
 	 */
-	public int processTradeRound() throws Exception
+	public int processTradeRound() throws UntradedCompanyException
 	{
 		int successfulTrades = 0;
 		for (int i = 0; i <= brokers.size(); i++){
@@ -96,7 +94,7 @@ public class SecuritiesExchange {
 			Trade nextTrade = currentBroker.getNextTrade();
 			String nextTradeCompanyCode = nextTrade.getCompanyCode();
 			if (companies.containsKey(nextTradeCompanyCode)){
-				throw UntradedCompanyException;
+				throw new UntradedCompanyException(nextTradeCompanyCode);
 			}
 			ListedCompany nextTradeCompany = companies.get(nextTradeCompanyCode);
 			int nextTradeQuantity = nextTrade.getShareQuantity();
@@ -107,8 +105,8 @@ public class SecuritiesExchange {
 
 	}
 	
-	// public int runCommandLineExchange(Scanner sc)
-	// {
-		
-	// }
+	public int runCommandLineExchange(Scanner sc)
+	{
+		return 0;
+	}
 }
