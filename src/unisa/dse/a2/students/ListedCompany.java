@@ -7,7 +7,8 @@ public class ListedCompany {
 	 */
 	private String name;
 	
-	public void getName() {
+	public String getName() {
+		return name;
 	}
 
 	/**
@@ -15,7 +16,8 @@ public class ListedCompany {
 	 */
 	private String code;
 	
-	public void getCode() {
+	public String getCode() {
+		return code;
 	}
 
 	/**
@@ -23,11 +25,15 @@ public class ListedCompany {
 	 */
 	private int currentPrice;
 	
-	public void getCurrentPrice() {
+	public int getCurrentPrice() {
+		return currentPrice;
 	}
 	
-	public ListedCompany(String code, String name, int currentPrice)
+	public ListedCompany(String _code, String _name, int _currentPrice)
 	{
+		code = _code;
+		name = _name;
+		currentPrice = _currentPrice;
 	}
 	
 	/**
@@ -38,7 +44,18 @@ public class ListedCompany {
 	 * @param quantity
 	 * @return the price after adjustment
 	 */
+	private float priceChange;
+	private float new_price;
+
 	public void processTrade(int quantity)
 	{
+		priceChange = quantity/100;
+		new_price = currentPrice+priceChange;
+		if (new_price < 1){
+			currentPrice = 1;
+		}
+		else{
+			currentPrice = Math.round(new_price);
+		}
 	}
 }

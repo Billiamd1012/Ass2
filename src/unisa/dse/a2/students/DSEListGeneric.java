@@ -8,18 +8,18 @@ import unisa.dse.a2.interfaces.ListGeneric;
  */
 public class DSEListGeneric<T> implements ListGeneric<T> {
 	
-	public NodeGeneric head;
-	private NodeGeneric tail;
+	public NodeGeneric<T> head;
+	private NodeGeneric<T> tail;
 
 	public DSEListGeneric() {
 		
 	}
-	public DSEListGeneric(NodeGeneric head_) {
+	public DSEListGeneric(NodeGeneric<T> head_) {
 		this.head = head_;
 	}
 	
 	//Takes a list then adds each element into a new list
-	public DSEListGeneric(DSEList other) { 
+	public DSEListGeneric(DSEListGeneric<T> other) { 
 		this.head = null;
 		this.tail = null;
 		// check if other DSEList is not empty
@@ -35,7 +35,7 @@ public class DSEListGeneric<T> implements ListGeneric<T> {
 	@Override
 	public T remove(int index) {
 		int counter = 0;
-		NodeGeneric currentNode = this.head;
+		NodeGeneric<T> currentNode = this.head;
 		while (currentNode != null) {
 			if (counter == index) {
 				//remove the current node
@@ -66,7 +66,7 @@ public class DSEListGeneric<T> implements ListGeneric<T> {
 	@Override 
 	public int indexOf(T obj) {
 		int counter = 0;
-		NodeGeneric currentNode = this.head;
+		NodeGeneric<T> currentNode = this.head;
 		while (currentNode != null) {
 			if (currentNode.get().equals(obj)) {
 				return counter;
@@ -81,7 +81,7 @@ public class DSEListGeneric<T> implements ListGeneric<T> {
 	@Override
 	public T get(int index) {
 		int counter = 0;
-		NodeGeneric currentNode = this.head;
+		NodeGeneric<T> currentNode = this.head;
 		while (currentNode != null) {
 			if (counter == index) {
 				return (T) currentNode.get();
@@ -103,7 +103,7 @@ public class DSEListGeneric<T> implements ListGeneric<T> {
 	//return the size of the list
 	public int size() {
 		int counter = 0;
-		NodeGeneric currentNode = this.head;
+		NodeGeneric<T> currentNode = this.head;
 		while (currentNode != null) {
 			currentNode = currentNode.next;
 			counter++;
@@ -115,7 +115,7 @@ public class DSEListGeneric<T> implements ListGeneric<T> {
 	@Override
 	public String toString() {
 		String listString = "";
-		NodeGeneric currentNode = this.head;
+		NodeGeneric<T> currentNode = this.head;
 		while (currentNode != null) {
 			listString += currentNode.get().toString();
 			currentNode = currentNode.next;
@@ -124,8 +124,8 @@ public class DSEListGeneric<T> implements ListGeneric<T> {
 	}
 
 	//add the parameter item at of the end of the list
-	public boolean add(Object obj) {
-		NodeGeneric newNode = new NodeGeneric(null, this.tail, obj);
+	public boolean add(T obj) {
+		NodeGeneric<T> newNode = new NodeGeneric<T>(null, this.tail, obj); // Specify the type argument <T>
 		if (this.head == null) {
 			this.head = newNode;
 		}
@@ -137,12 +137,12 @@ public class DSEListGeneric<T> implements ListGeneric<T> {
 	}
 
 	//add item at parameter's index
-	public boolean add(int index, Object obj) {
+	public boolean add(int index, T obj) {
 		int counter = 0;
-		NodeGeneric currentNode = this.head;
+		NodeGeneric<T> currentNode = this.head;
 		while (currentNode != null) {
 			if (counter == index) {
-				NodeGeneric newNode = new NodeGeneric(currentNode, currentNode.prev, obj);
+				NodeGeneric<T> newNode = new NodeGeneric<T>(currentNode, currentNode.prev, obj);
 				if (currentNode.prev != null) {
 					currentNode.prev.next = newNode;
 				}
@@ -159,8 +159,8 @@ public class DSEListGeneric<T> implements ListGeneric<T> {
 	}
 
 	//searches list for parameter's String return true if found
-	public boolean contains(Object obj) {
-		NodeGeneric currentNode = this.head;
+	public boolean contains(T obj) {
+		NodeGeneric<T> currentNode = this.head;
 		while (currentNode != null) {
 			if (currentNode.get().equals(obj)) {
 				return true;
@@ -171,9 +171,9 @@ public class DSEListGeneric<T> implements ListGeneric<T> {
 	}
 
 	//removes the parameter's item form the list
-	public boolean remove(Object obj) {
+	public boolean remove(T obj) {
 		int counter = 0;
-		NodeGeneric currentNode = this.head;
+		NodeGeneric<T> currentNode = this.head;
 		while (currentNode != null) {
 			if (currentNode.equals(obj)) {
 				remove(counter);
@@ -191,11 +191,13 @@ public class DSEListGeneric<T> implements ListGeneric<T> {
 
 	@Override
 	public boolean equals(Object other) {
-		NodeGeneric thisNode = this.head;
-		if (!(other instanceof DSEListGeneric)) {
+		if (!(other instanceof DSEListGeneric<?>)) {
 			return false;
 		}
-		NodeGeneric otherNode = ((DSEListGeneric) other).head;
+		@SuppressWarnings("unchecked")
+		DSEListGeneric<T> otherList = (DSEListGeneric<T>) other; // Suppress warning with unchecked cast
+		NodeGeneric<T> thisNode = this.head;
+		NodeGeneric<T> otherNode = otherList.head;
 		while (thisNode != null && otherNode != null) {
 			if (thisNode.get() != otherNode.get()) {
 				return false;
