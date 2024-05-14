@@ -12,8 +12,9 @@ public class Trade implements Comparable<Trade> {
 	/**
 	 * @return Track the moment in time this Trade was created
 	 */
-	public void getCreated()
+	public long getCreated()
 	{
+		return created;
 	}
 	
 	public String listedCompanyCode;
@@ -21,7 +22,8 @@ public class Trade implements Comparable<Trade> {
 	/**
 	 * @return The company's code
 	 */
-	public void getCompanyCode() {
+	public String getCompanyCode() {
+		return listedCompanyCode;
 	}
 	
 	private int shareQuantity;
@@ -29,7 +31,8 @@ public class Trade implements Comparable<Trade> {
 	/**
 	 * @return The quantity of shares to trade
 	 */
-	public void getShareQuantity() {
+	public int getShareQuantity() {
+		return shareQuantity;
 	}
 
 	private StockBroker broker;
@@ -37,7 +40,8 @@ public class Trade implements Comparable<Trade> {
 	/**
 	 * @return The broker associated with this trade
 	 */
-	public void getStockBroker() {
+	public StockBroker getStockBroker() {
+		return broker;
 	}
 
 
@@ -59,13 +63,28 @@ public class Trade implements Comparable<Trade> {
 	 * @param listedCompanyCode
 	 * @param shareQuantity
 	 */
-	public Trade(StockBroker broker, String listedCompanyCode, int shareQuantity)
+	public Trade(StockBroker _broker, String _listedCompanyCode, int _shareQuantity)
 	{
 		created = System.nanoTime(); //do not change this
 		tradeId = System.nanoTime(); //do not change this
 		try { Thread.sleep(100); } catch (Exception x) {}
+		broker = _broker;
+		listedCompanyCode = _listedCompanyCode;
+		shareQuantity = _shareQuantity;
 	}
 	
+	/**
+	 * Checks if a trade is on their stockbrokers watch list
+	 *  
+	 * @return true if on the watchlist, false if not
+	 */
+
+	private boolean onWatchList(){
+		if (this.getStockBroker().getWatchlist().contains(this.getCompanyCode())){
+			return true;
+		}
+		return false;
+	}
 	/**
 	 * Compares one trade to another trade
 	 * 
@@ -81,8 +100,27 @@ public class Trade implements Comparable<Trade> {
 	 */
 	public int compareTo(Trade t)
 	{
+		if (this.onWatchList()){
+			if (t.onWatchList()){
+				return 0;
+			}
+			return 1;
+		}
+		if (t.onWatchList()){
+			return -1;
+		}
+		if (this.getCreated() < t.getCreated()){
+			if (this.getCreated() == t.getCreated()){
+				return 0;
+			}
+			return -1;
+		}
+		else{
+			return 1;
+		}
+		
 	}
-	
+
 
 	/***
 	 * Do not modify this toString, it is used for testing purposes

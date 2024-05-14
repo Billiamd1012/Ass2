@@ -27,15 +27,18 @@ public class NodeGeneric<T> {
 		return t;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public boolean equals(Object other) {
-		if (this == other)
+		if (this == other){
 			return true;
-		if (other == null)
+		}
+		if (other == null){
 			return false;
-		if (!(other instanceof NodeGeneric<?>))
+		}
+		if (!(other instanceof NodeGeneric<?>)){
 			return false;
-
+		}
 		return t.equals(((NodeGeneric<T>)other).get());
 	}
 
