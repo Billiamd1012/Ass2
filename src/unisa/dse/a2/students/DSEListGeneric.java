@@ -24,13 +24,10 @@ public class DSEListGeneric<T> implements ListGeneric<T> {
 		this.tail = null;
 		// check if other DSEList is not empty
 		if (other.head != null) {
-			NodeGeneric currentNode = other.head;
-			this.head = new NodeGeneric(currentNode.next, currentNode.prev, currentNode.getString());
-			while (currentNode.next != null) {
-				currentNode = currentNode.next;
-				this.head.next = new NodeGeneric(currentNode.next, currentNode.prev, currentNode.getString());
+			// use the add method to add to the current list
+			for (int i=0;i<other.size();i++){
+				this.add(other.get(i));
 			}
-			this.tail = currentNode;
 		}
 	}
 
@@ -57,7 +54,7 @@ public class DSEListGeneric<T> implements ListGeneric<T> {
 				if (currentNode == this.tail) {
 					this.tail = currentNode.prev;
 				}
-				return currentNode.get();
+				return (T) currentNode.get();
 			}
 			currentNode = currentNode.next;
 			counter++;
@@ -87,7 +84,7 @@ public class DSEListGeneric<T> implements ListGeneric<T> {
 		NodeGeneric currentNode = this.head;
 		while (currentNode != null) {
 			if (counter == index) {
-				return currentNode.get();
+				return (T) currentNode.get();
 			}
 			currentNode = currentNode.next;
 			counter++;
