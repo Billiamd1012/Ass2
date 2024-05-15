@@ -151,7 +151,7 @@ public class DSEList implements List {
 
 	// Remove the String at the parameter's index
 	public String remove(int index) {
-		if (index < 0) return "Index not found";
+		if (index < 0) return null;
 		int counter = 0;
 		Node currentNode = this.head;
 		while (currentNode != null) {
@@ -173,7 +173,7 @@ public class DSEList implements List {
 			currentNode = currentNode.next;
 			counter++;
 		}
-		return "Index not found";
+		return null;
 	}
 
 	// Removes the parameter's String from the list
