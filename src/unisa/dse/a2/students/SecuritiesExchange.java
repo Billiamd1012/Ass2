@@ -111,7 +111,7 @@ public class SecuritiesExchange {
 			nextTradeCompany.processTrade(nextTradeQuantity);
 			successfulTrades++;
 			
-			String announcement = String.format("Trade: %d %s @ %.2f via %s", nextTradeQuantity, nextTradeCompanyCode, priceBeforeTrade, currentBroker.getName());
+			String announcement = String.format("Trade: %d %s @ %d via %s", nextTradeQuantity, nextTradeCompanyCode, priceBeforeTrade, currentBroker.getName());
 			announcements.add(announcement);
 		}
 		return successfulTrades;
