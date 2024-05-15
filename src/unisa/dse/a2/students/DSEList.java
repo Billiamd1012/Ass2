@@ -2,70 +2,42 @@ package unisa.dse.a2.students;
 
 import unisa.dse.a2.interfaces.List;
 
-/**
- * @author simont
- *
- */
 public class DSEList implements List {
 	
 	public Node head;
 	private Node tail;
 
 	public DSEList() {
-		
+		this.head = null;
+		this.tail = null;
 	}
+
 	public DSEList(Node head_) {
-		head = head_;
+		this.head = head_;
+		this.tail = head_;
+		while (this.tail != null && this.tail.next != null) {
+			this.tail = this.tail.next;
+		}
 	}
-	
-	//Takes a list then adds each element into a new list
+
+	// Takes a list then adds each element into a new list
 	public DSEList(DSEList other) {
 		this.head = null;
 		this.tail = null;
-		// check if other DSEList is not empty
 		if (other.head != null) {
 			Node currentNode = other.head;
 			this.head = new Node(currentNode.next, currentNode.prev, currentNode.getString());
+			Node newNode = this.head;
 			while (currentNode.next != null) {
 				currentNode = currentNode.next;
-				this.head.next = new Node(currentNode.next, currentNode.prev, currentNode.getString());
+				newNode.next = new Node(currentNode.next, newNode, currentNode.getString());
+				newNode = newNode.next;
 			}
-			this.tail = currentNode;
+			this.tail = newNode;
 		}
-
 	}
 
-	//remove the String at the parameter's index
-	public String remove(int index) {
-		int counter = 0;
-		Node currentNode = this.head;
-		while (currentNode != null) {
-			if (counter == index) {
-				//remove the current node
-				//set the previous node's next to the current node's next
-				if (currentNode.prev != null) {
-					currentNode.prev.next = currentNode.next;
-				}
-				//set the next node's previous to the current node's previous
-				if (currentNode.next != null) {
-					currentNode.next.prev = currentNode.prev;
-				}
-				//if the current node is the head or tail, set the head or tail to the next or previous node
-				if (currentNode == this.head) {
-					this.head = currentNode.next;
-				}
-				if (currentNode == this.tail) {
-					this.tail = currentNode.prev;
-				}
-				return currentNode.getString();
-			}
-			currentNode = currentNode.next;
-			counter++;
-		}
-		return "Index not found";
-	}
-
-	//returns the index of the String parameter 
+	// Returns the index of the String parameter 
 	public int indexOf(String obj) {
 		int counter = 0;
 		Node currentNode = this.head;
@@ -79,7 +51,7 @@ public class DSEList implements List {
 		return -1;
 	}
 	
-	//returns String at parameter's index
+	// Returns String at parameter's index
 	public String get(int index) {
 		int counter = 0;
 		Node currentNode = this.head;
@@ -90,18 +62,15 @@ public class DSEList implements List {
 			currentNode = currentNode.next;
 			counter++;
 		}
-		return "Index not found";
+		return null;
 	}
 
-	//checks if there is a list
+	// Checks if there is a list
 	public boolean isEmpty() {
-		if (this.head == null) {
-			return true;
-		}
-		return false;
+		return this.head == null;
 	}
 
-	//return the size of the list
+	// Return the size of the list
 	public int size() {
 		int counter = 0;
 		Node currentNode = this.head;
@@ -112,34 +81,39 @@ public class DSEList implements List {
 		return counter;
 	}
 	
-	//Take each element of the list a writes them to a string 
+	// Take each element of the list and writes them to a string 
 	@Override
 	public String toString() {
-		String listString = "";
+		if (this.head == null) {
+			return "";
+		}
+		StringBuilder listString = new StringBuilder();
 		Node currentNode = this.head;
-		while (currentNode.next != null) {
-			listString += currentNode.getString() + " ";
+		while (currentNode != null) {
+			listString.append(currentNode.getString());
+			if (currentNode.next != null) {
+				listString.append(" ");
+			}
 			currentNode = currentNode.next;
 		}
-		listString += currentNode.getString();
-		return listString;
+		return listString.toString();
 	}
 
-	//add the parameter String at of the end of the list
+	// Add the parameter String at the end of the list
 	public boolean add(String obj) {
 		Node newNode = new Node(null, this.tail, obj);
 		if (this.head == null) {
 			this.head = newNode;
-		}
-		if (this.tail != null) {
+		} else {
 			this.tail.next = newNode;
 		}
 		this.tail = newNode;
 		return true;
 	}
 
-	//add String at parameter's index
+	// Add String at parameter's index
 	public boolean add(int index, String obj) {
+		if (index < 0) return false;
 		int counter = 0;
 		Node currentNode = this.head;
 		while (currentNode != null) {
@@ -157,11 +131,13 @@ public class DSEList implements List {
 			currentNode = currentNode.next;
 			counter++;
 		}
+		if (counter == index) {
+			return add(obj);
+		}
 		return false;
-
 	}
 
-	//searches list for parameter's String return true if found
+	// Searches list for parameter's String return true if found
 	public boolean contains(String obj) {
 		Node currentNode = this.head;
 		while (currentNode != null) {
@@ -173,7 +149,34 @@ public class DSEList implements List {
 		return false;
 	}
 
-	//removes the parameter's String form the list
+	// Remove the String at the parameter's index
+	public String remove(int index) {
+		if (index < 0) return "Index not found";
+		int counter = 0;
+		Node currentNode = this.head;
+		while (currentNode != null) {
+			if (counter == index) {
+				if (currentNode.prev != null) {
+					currentNode.prev.next = currentNode.next;
+				}
+				if (currentNode.next != null) {
+					currentNode.next.prev = currentNode.prev;
+				}
+				if (currentNode == this.head) {
+					this.head = currentNode.next;
+				}
+				if (currentNode == this.tail) {
+					this.tail = currentNode.prev;
+				}
+				return currentNode.getString();
+			}
+			currentNode = currentNode.next;
+			counter++;
+		}
+		return "Index not found";
+	}
+
+	// Removes the parameter's String from the list
 	public boolean remove(String obj) {
 		int counter = 0;
 		Node currentNode = this.head;
@@ -183,33 +186,36 @@ public class DSEList implements List {
 				return true;
 			}
 			currentNode = currentNode.next;
+			counter++;
 		}
 		return false;
 	}
 	
 	@Override
 	public int hashCode() {
-		return 0;
+		int result = 1;
+		Node currentNode = head;
+		while (currentNode != null) {
+			result = 31 * result + (currentNode.getString() == null ? 0 : currentNode.getString().hashCode());
+			currentNode = currentNode.next;
+		}
+		return result;
 	}
 
 	@Override
 	public boolean equals(Object other) {
+		if (this == other) return true;
+		if (other == null || getClass() != other.getClass()) return false;
+		DSEList dseList = (DSEList) other;
 		Node thisNode = this.head;
-		if (!(other instanceof DSEList)) {
-			return false;
-		}
-		Node otherNode = ((DSEList) other).head;
+		Node otherNode = dseList.head;
 		while (thisNode != null && otherNode != null) {
-			if (thisNode.toString() != otherNode.toString()) {
+			if (!thisNode.getString().equals(otherNode.getString())) {
 				return false;
 			}
 			thisNode = thisNode.next;
 			otherNode = otherNode.next;
 		}
-		if (thisNode != null || otherNode != null) {
-			return false;
-		}
-		return true;
+		return thisNode == null && otherNode == null;
 	}
-	
 }
