@@ -38,6 +38,9 @@ public class SecuritiesExchange {
 	public SecuritiesExchange(String _name)
 	{
 		name = _name;
+		this.brokers = new DSEListGeneric<>();
+		this.announcements = new DSEListGeneric<>();
+		this.companies = new HashMap<>();
 	}
 	
 	/**
@@ -47,6 +50,9 @@ public class SecuritiesExchange {
 	 */
 	public boolean addCompany(ListedCompany company)
 	{
+		if (company == null){
+			return false;
+		}
 		if (companies.containsKey(company.getCode())){
 			return false;
 		}
@@ -60,6 +66,9 @@ public class SecuritiesExchange {
 	 */
 	public boolean addBroker(StockBroker broker)
 	{
+		if (broker == null){
+			return false;
+		}
 		if (brokers.contains(broker)){
 			return false;
 		}
@@ -86,23 +95,26 @@ public class SecuritiesExchange {
 	public int processTradeRound() throws UntradedCompanyException
 	{
 		int successfulTrades = 0;
-		for (int i = 0; i <= brokers.size(); i++){
+		for (int i = 0; i < brokers.size(); i++){
 			StockBroker currentBroker = brokers.get(i);
-			if (currentBroker.getNextTrade() == null){
+			Trade nextTrade = currentBroker.getNextTrade();
+			if (nextTrade == null){
 				continue;
 			}
-			Trade nextTrade = currentBroker.getNextTrade();
 			String nextTradeCompanyCode = nextTrade.getCompanyCode();
-			if (companies.containsKey(nextTradeCompanyCode)){
+			if (!companies.containsKey(nextTradeCompanyCode)){
 				throw new UntradedCompanyException(nextTradeCompanyCode);
 			}
 			ListedCompany nextTradeCompany = companies.get(nextTradeCompanyCode);
 			int nextTradeQuantity = nextTrade.getShareQuantity();
+			int priceBeforeTrade = nextTradeCompany.getCurrentPrice();
 			nextTradeCompany.processTrade(nextTradeQuantity);
-			successfulTrades += nextTradeQuantity;
+			successfulTrades++;
+			
+			String announcement = String.format("Trade: %d %s @ %.2f via %s", nextTradeQuantity, nextTradeCompanyCode, priceBeforeTrade, currentBroker.getName());
+			announcements.add(announcement);
 		}
 		return successfulTrades;
-
 	}
 	
 	public int runCommandLineExchange(Scanner sc)

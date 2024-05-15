@@ -109,7 +109,7 @@ public class Trade implements Comparable<Trade> {
 		if (t.onWatchList()){
 			return -1;
 		}
-		if (this.getCreated() < t.getCreated()){
+		if (this.getCreated() <= t.getCreated()){
 			if (this.getCreated() == t.getCreated()){
 				return 0;
 			}
